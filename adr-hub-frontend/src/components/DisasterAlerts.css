@@ -1,0 +1,84 @@
+/* 🔴 General Container Styles */
+.alerts-container {
+    padding: 20px;
+    background: #f4f4f9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 🔵 Heading */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #2c3e50;
+}
+
+/* ⚡ Alert Cards */
+.alert-card {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+    width: 90%;
+    max-width: 600px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.alert-card:hover {
+    transform: translateY(-5px);
+}
+
+/* 🟢 Alert Titles */
+.alert-card h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* 🟠 Alert Details */
+.alert-card p {
+    font-size: 14px;
+    color: #555;
+    margin: 5px 0;
+}
+
+/* 🔗 Alert Links */
+.alert-card a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.alert-card a:hover {
+    text-decoration: underline;
+}
+
+/* ❌ Error Messages */
+.error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* ⏳ Loading Message */
+.loading-message {
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 768px) {
+    .alert-card {
+        width: 95%;
+    }
+
+}

@@ -9,7 +9,10 @@
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "leaflet": "^1.9.4",
+    "node-fetch": "^3.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-leaflet": "^5.0.0",
@@ -45,5 +48,18 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "ADR-Hub is an AI-driven disaster intelligence platform using NLP, Computer Vision & Geospatial AI to aggregate, analyze & visualize crisis data in real time. It provides instant alerts, AI-driven analytics & insights, enabling faster emergency response & resource allocation.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maimohaan/ADR-Hub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maimohaan/ADR-Hub/issues"
+  },
+  "homepage": "https://github.com/maimohaan/ADR-Hub#readme"
 }

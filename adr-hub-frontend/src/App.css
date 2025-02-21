@@ -276,4 +276,65 @@ nav a:hover {
     height: 400px; /* Or any fixed height */
     width: 100%;
   }
+  .alerts-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* Center the cards */
+    padding: 20px;
+}
+
+.alert-card {
+    background: linear-gradient(135deg, #ffdddd, #ffe5e5); /* Subtle gradient */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 320px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.alert-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: #d9534f; /* Red alert indicator */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.alert-card h3 {
+    color: #c9302c;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.alert-card p {
+    color: #333;
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.alert-card a {
+    color: #0275d8;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.alert-card a:hover {
+    color: #025aa5;
+    text-decoration: underline;
+}
+
+/* Hover effect */
+.alert-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
 }

@@ -3,9 +3,8 @@ import React, { useState } from "react";
 function DisasterClassifier() {
     const [inputText, setInputText] = useState("");
     const [classification, setClassification] = useState(null);
-    const [tweets, setTweets] = useState([]);
-    const [redditPosts, setRedditPosts] = useState([]);
-    const [loading, setLoading] = useState(false); // Added loading state
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     async function classifyText() {
         if (!inputText.trim()) {
@@ -13,7 +12,9 @@ function DisasterClassifier() {
             return;
         }
 
-        setLoading(true); // Show loading state
+        setLoading(true);
+        setError(""); // Reset error before request
+
         try {
             const response = await fetch("http://127.0.0.1:8000/classify/", {
                 method: "POST",
@@ -21,42 +22,33 @@ function DisasterClassifier() {
                 body: JSON.stringify({ text: inputText }),
             });
 
-            if (!response.ok) throw new Error("Failed to fetch classification.");
+            if (!response.ok) {
+                throw new Error("Failed to classify text.");
+            }
 
             const data = await response.json();
-            console.log("Classification Result:", data);
-            setClassification(data); // Save classification data
+            setClassification(data);
         } catch (error) {
             console.error("Error:", error);
-            alert("Error fetching classification. Please try again.");
+            setError("Failed to classify text. Please try again.");
         } finally {
-            setLoading(false); // Hide loading state
+            setLoading(false);
         }
     }
 
     return (
         <div className="classifier-container">
             <h1>Disaster Classifier</h1>
-
-            {/* Text Input for Classification */}
-            <input
-                type="text"
-                placeholder="Enter disaster-related text..."
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-            />
+            <input type="text" value={inputText} onChange={(e) => setInputText(e.target.value)} />
             <button onClick={classifyText} disabled={loading}>
                 {loading ? "Classifying..." : "Classify"}
             </button>
 
-            {/* Classification Result Display */}
+            {error && <p className="error">{error}</p>}
             {classification && (
                 <div className="classification-result">
-                    <h3>Classification Result</h3>
-                    <p>
-                        <strong>Label:</strong> {classification?.label || "Unknown"} <br />
-                        <strong>Confidence Score:</strong> {classification?.score ? classification.score.toFixed(2) : "N/A"}
-                    </p>
+                    <h3>Classification: {classification.label}</h3>
+                    <p>Confidence: {classification.score.toFixed(2)}</p>
                 </div>
             )}
         </div>

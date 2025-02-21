@@ -14,11 +14,14 @@ from fetch_tweets import fetch_tweets
 # Load environment variables
 load_dotenv()
 
-# API Keys
+# API Keys - Ensure they are available
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID")
 REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET")
 REDDIT_USER_AGENT = os.getenv("REDDIT_USER_AGENT")
+
+if not NEWS_API_KEY or not REDDIT_CLIENT_ID or not REDDIT_CLIENT_SECRET:
+    logging.warning("⚠️  Missing one or more API keys! Some features may not work.")
 
 # Logging Configuration
 logging.basicConfig(
@@ -38,87 +41,93 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load Pre-trained NLP Model for Disaster Classification
-try:
-    disaster_classifier = pipeline("text-classification", model="bhadresh-savani/distilbert-base-uncased-emotion")
-    logging.info("✅ Disaster Classification model loaded successfully!")
-except Exception as e:
-    logging.error(f"❌ Error loading NLP model: {e}")
-    raise RuntimeError("Failed to load NLP model.")
+# Lazy Loading NLP Model
+disaster_classifier = None
 
-# Define request model for text classification
+
+def load_model():
+    global disaster_classifier
+    if disaster_classifier is None:
+        try:
+            disaster_classifier = pipeline("text-classification",
+                                           model="bhadresh-savani/distilbert-base-uncased-emotion")
+            logging.info("✅ Disaster Classification model loaded successfully!")
+        except Exception as e:
+            logging.error(f"❌ Error loading NLP model: {e}")
+            raise RuntimeError("Failed to load NLP model.")
+
+
+# Request Model
 class TextRequest(BaseModel):
     text: str
+
 
 @app.get("/")
 def home():
     return {"message": "ADR-Hub API is running!"}
 
+
 @app.post("/classify/")
 async def classify_text(request: TextRequest):
+    if not request.text.strip():
+        raise HTTPException(status_code=400, detail="Text field is required.")
+
+    load_model()  # Load NLP model only when needed
     try:
-        if not request.text.strip():
-            raise HTTPException(status_code=400, detail="Text field is required.")
         result = disaster_classifier(request.text)
         if not result:
             raise HTTPException(status_code=500, detail="Failed to classify text.")
+
         classification = result[0]
         return {
             "label": classification.get("label", "unknown"),
-            "score": round(classification.get("score", 0.0), 4),
+            "score": round(classification.get("score", 0.4), 4),
             "input_text": request.text
         }
     except Exception as e:
         logging.error(f"❌ Error classifying text: {e}")
         raise HTTPException(status_code=500, detail="Error processing text classification.")
 
+
+# Fetch Tweets
 @app.get("/fetch_tweets/")
 async def get_tweets(query: str = "earthquake OR flood OR wildfire OR hurricane", max_results: int = 5):
     try:
         tweets = fetch_tweets(query, max_results)
-        return tweets if tweets else {"message": "No tweets found."}
+        return {"tweets": tweets} if tweets else {"message": "No tweets found."}
     except Exception as e:
         logging.error(f"❌ Error fetching tweets: {e}")
         raise HTTPException(status_code=500, detail="Error fetching tweets.")
 
+
+# Fetch Reddit Posts
 @app.get("/fetch_reddit/")
 async def get_reddit_posts(query: str = "earthquake OR flood OR wildfire OR hurricane", limit: int = 5):
     try:
         posts = fetch_reddit_posts(query, limit)
-        return posts if posts else {"message": "No Reddit posts found."}
+        return {"reddit_posts": posts} if posts else {"message": "No Reddit posts found."}
     except Exception as e:
         logging.error(f"❌ Error fetching Reddit posts: {e}")
         raise HTTPException(status_code=500, detail="Error fetching Reddit posts.")
 
+
+# Fetch Disaster News
 @app.get("/news")
 def get_news():
     try:
-        response = requests.get(f"https://newsapi.org/v2/everything?q=disaster&apiKey={NEWS_API_KEY}")
+        response = requests.get(f"https://newsapi.org/v2/everything?q=disaster&apiKey={NEWS_API_KEY}", timeout=45)
         data = response.json()
-        return {"posts": data.get("articles", [])}
+        return {"news": data.get("articles", [])}
     except Exception as e:
+        logging.error(f"❌ Error fetching news: {e}")
         return {"error": "Failed to fetch news articles", "details": str(e)}
 
-@app.get("/reddit")
-def fetch_reddit_data():
-    try:
-        auth = requests.auth.HTTPBasicAuth(REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET)
-        data = {"grant_type": "client_credentials"}
-        headers = {"User-Agent": REDDIT_USER_AGENT}
-        token_res = requests.post("https://www.reddit.com/api/v1/access_token", auth=auth, data=data, headers=headers)
-        token = token_res.json().get("access_token")
-        if not token:
-            return {"error": "Failed to get Reddit access token"}
-        headers["Authorization"] = f"Bearer {token}"
-        reddit_res = requests.get("https://oauth.reddit.com/r/worldnews/search?q=disaster&sort=new", headers=headers)
-        reddit_data = reddit_res.json()
-        return {"posts": reddit_data.get("data", {}).get("children", [])}
-    except Exception as e:
-        return {"error": "Failed to fetch Reddit posts", "details": str(e)}
 
+# NASA, NOAA, USGS Disaster Alerts
 NASA_API_URL = "https://eonet.gsfc.nasa.gov/api/v3/events"
 NOAA_API_URL = "https://api.weather.gov/alerts/active"
 USGS_API_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&limit=5"
+
 
 @app.get("/disaster_alerts")
 async def get_disaster_alerts():
@@ -135,7 +144,11 @@ async def get_disaster_alerts():
         logging.error(f"❌ Error fetching disaster alerts: {e}")
         return {"error": f"API request failed: {e}"}
 
+
+# WebSocket for Real-Time Updates
 clients = []
+
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
@@ -150,7 +163,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 "NOAA_Alerts": noaa_data.get("features", []),
                 "USGS_Alerts": usgs_data.get("features", [])
             }
-            for client in clients:
+            for client in clients[:]:  # Iterate over a copy to safely remove disconnected clients
                 try:
                     await client.send_json(alert_data)
                 except WebSocketDisconnect:

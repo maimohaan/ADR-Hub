@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../styles/SocialMediaAlerts.css"; // Ensure correct CSS path
+import "./SocialMediaAlerts.css"; // Ensure correct CSS path
 
 const SocialMediaAlerts = () => {
     const [redditPosts, setRedditPosts] = useState([]);

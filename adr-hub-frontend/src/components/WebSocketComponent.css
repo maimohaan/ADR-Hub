@@ -1,0 +1,45 @@
+/* WebSocketComponent.css */
+.alerts-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+}
+
+.alerts-container h2 {
+    text-align: center;
+    color: #d9534f;
+}
+
+.alerts-list {
+    list-style: none;
+    padding: 0;
+}
+
+.alert-item {
+    background: white;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.alert-item h3 {
+    color: #d9534f;
+    margin-bottom: 5px;
+}
+
+.alert-item p {
+    margin: 5px 0;
+}
+
+.alert-item a {
+    color: #0275d8;
+    text-decoration: none;
+}
+
+.alert-item a:hover {
+    text-decoration: underline;
+}

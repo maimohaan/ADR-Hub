@@ -1,0 +1,279 @@
+/* 🌍 Global Styling */
+body {
+  background-color: #121212;
+  color: white;
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+/* 🌍 Center the entire app */
+.App {
+  text-align: center;
+}
+
+/* 🔥 Full-Screen Map */
+.map-container {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+/* 🔥 Glowing Points */
+.glowing-marker {
+  background-color: rgba(255, 204, 0, 0.8);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  box-shadow: 0px 0px 10px rgba(255, 204, 0, 1);
+  animation: glowEffect 1.5s infinite alternate;
+}
+
+/* 🔥 Glow Animation */
+@keyframes glowEffect {
+  from {
+    box-shadow: 0px 0px 10px rgba(255, 204, 0, 0.5);
+  }
+  to {
+    box-shadow: 0px 0px 20px rgba(255, 204, 0, 1);
+  }
+}
+
+/* 📊 Stats Section */
+.stats-container {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 50px;
+}
+
+.stats-item {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* 🏆 Header Section */
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 20px;
+}
+
+/* 📌 Navigation Bar */
+nav {
+  background-color: #20232a;
+  padding: 15px;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 0 0 10px 10px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #61dafb;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 20px;
+  transition: all 0.3s ease-in-out;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* 📌 Active Page Highlight */
+nav a.active {
+  color: #ffffff;
+  border-bottom: 2px solid #61dafb;
+}
+
+nav a:hover {
+  background-color: #61dafb;
+  color: #20232a;
+  padding: 10px 15px;
+}
+
+/* 📌 Main Content */
+.content {
+  padding-top: 90px;
+  margin-bottom: 60px;
+}
+
+/* 📖 About Page Styling */
+.about-container {
+  padding: 60px 20px;
+  text-align: center;
+  max-width: 800px;
+  margin: auto;
+}
+
+.about-container h2 {
+  font-size: 26px;
+  color: #61dafb;
+}
+
+.about-container p {
+  font-size: 18px;
+  color: #ccc;
+  max-width: 600px;
+  margin: 10px auto;
+  line-height: 1.6;
+}
+
+/* 🦶 Footer Styling */
+.App-footer {
+  background-color: #20232a;
+  color: #61dafb;
+  padding: 15px;
+  font-size: 16px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 🌍 Leaflet Map Adjustments */
+.leaflet-container {
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* 📰 News Page Styling */
+.news-container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  text-align: center;
+}
+
+/* 🔍 Search Bar */
+.search-bar {
+  width: 100%;
+  max-width: 600px;
+  padding: 12px;
+  font-size: 16px;
+  margin: 10px auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.search-bar:focus {
+  border-color: #61dafb;
+  box-shadow: 0px 0px 6px rgba(97, 218, 251, 0.6);
+}
+
+/* 📰 News Articles */
+.news-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.news-article {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.news-article:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.news-article h3 {
+  font-size: 20px;
+  color: #20232a;
+}
+
+.news-article p {
+  font-size: 16px;
+  color: #444;
+}
+
+.news-article a {
+  color: #61dafb;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.news-article a:hover {
+  text-decoration: underline;
+  color: #20232a;
+}
+
+/* 📊 Disaster Classifier Container */
+.classifier-container {
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(255, 204, 0, 0.3);
+  text-align: center;
+  width: 80%;
+  margin: 40px auto;
+}
+
+.classifier-container h2 {
+  font-size: 24px;
+  color: #ffcc00;
+}
+
+.classifier-container p {
+  font-size: 16px;
+  color: #ddd;
+}
+
+.upload-btn {
+  background-color: #ffcc00;
+  color: #121212;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.upload-btn:hover {
+  background-color: #ffaa00;
+}
+
+/* 🌍 Responsive Adjustments */
+@media (max-width: 768px) {
+  .news-list {
+    grid-template-columns: 1fr;
+  }
+
+  nav a {
+    font-size: 16px;
+    margin: 0 10px;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .map-container {
+    height: 400px; /* Or any fixed height */
+    width: 100%;
+  }
+}
